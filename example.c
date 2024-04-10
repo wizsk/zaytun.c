@@ -20,7 +20,7 @@
 u_int32_t pixels[HEIGHT * WIDTH];
 
 int save_to_file(u_int32_t *pixels, size_t w, size_t h, const char *file_name) {
-  return stbi_write_png(file_name, w, h, 4, pixels, WIDTH * sizeof(u_int32_t));
+  return stbi_write_png(file_name, w, h, 4, pixels, w * sizeof(u_int32_t));
 }
 
 // for the cheker board
