@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define SCALER 1
+#define SCALER 2
 #define WIDTH (SCALER * 800)
 #define HEIGHT (SCALER * 600)
 
@@ -97,9 +97,23 @@ void lines_man() {
   }
 }
 
+void triangle() {
+  fill(pixels, WIDTH, HEIGHT, BACLGROUD_COLOR);
+
+  u_int32_t c = FOREGROUD_COLOR;
+  fill_triangle(pixels, WIDTH, HEIGHT, WIDTH / 2, HEIGHT / 8, WIDTH / 7,
+                HEIGHT / 2, WIDTH * 7 / 8, HEIGHT * 7 / 8, c);
+
+  const char *ouput = IMG_DIR "/trianlge.png";
+  if (save_to_file(pixels, WIDTH, HEIGHT, ouput) < 0) {
+    printf("err: while saveing file %s\n", ouput);
+  }
+}
+
 int main() {
   mkdir(IMG_DIR, 0777);
   lines_man();
   checkerboard_rec();
   checkerboard_cir();
+  triangle();
 }

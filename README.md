@@ -20,3 +20,5 @@ gcc example.c -o example
 ![checker board](./demos/chekerboard_cir.png)
 
 ![lines](./demos/lines.png)
+
+![triangle](./demos/trianlge.png)

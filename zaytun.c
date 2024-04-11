@@ -4,11 +4,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define SWAP(t, a, b)                                                          \
+#define SWAP(type, a, b)                                                       \
   {                                                                            \
-    t tmp = a;                                                                 \
+    type t = a;                                                                \
     a = b;                                                                     \
-    b = tmp;                                                                   \
+    b = t;                                                                     \
   }
 
 void fill(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
@@ -94,10 +94,66 @@ void draw_line(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
   }
 }
 
-// void fill_triangle(uint32_t *pixels, size_t pixels_width, size_t
-// pixels_height,
-//                    int x1, int y1, int x2, int y2, int x3, int y3,
-//                    uint32_t color) {
-//   //
-// }
+void triangle_sort_by_y(int *x1, int *y1, int *x2, int *y2, int *x3, int *y3) {
+  //
+  if (*y1 > *y2) {
+    SWAP(int, *x1, *x2);
+    SWAP(int, *y1, *y2);
+  }
+
+  if (*y2 > *y3) {
+    SWAP(int, *x2, *x3);
+    SWAP(int, *y2, *y3);
+  }
+
+  if (*y1 > *y2) {
+    SWAP(int, *x1, *x2);
+    SWAP(int, *y1, *y2);
+  }
+}
+
+void fill_triangle(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
+                   int x1, int y1, int x2, int y2, int x3, int y3,
+                   uint32_t color) {
+  triangle_sort_by_y(&x1, &y1, &x2, &y2, &x3, &y3);
+
+  int dx12 = x2 - x1;
+  int dy12 = y2 - y1;
+  int dx13 = x3 - x1;
+  int dy13 = y3 - y1;
+
+  for (int y = y1; y <= y2; ++y) {
+    if (0 <= y && (size_t)y < pixels_height) {
+      int s1 = dy12 != 0 ? (y - y1) * dx12 / dy12 + x1 : x1;
+      int s2 = dy13 != 0 ? (y - y1) * dx13 / dy13 + x1 : x1;
+      if (s1 > s2)
+        SWAP(int, s1, s2);
+      for (int x = s1; x <= s2; x++) {
+        if (0 <= x && (size_t)x < pixels_width) {
+          pixels[y * pixels_width + x] = color;
+        }
+      }
+    }
+  }
+
+  int dx32 = x2 - x3;
+  int dy32 = y2 - y3;
+  int dx31 = x1 - x3;
+  int dy31 = y1 - y3;
+
+  for (int y = y2; y <= y3; ++y) {
+    if (0 <= y && (size_t)y < pixels_height) {
+      int s1 = dy32 != 0 ? (y - y3) * dx32 / dy32 + x3 : x3;
+      int s2 = dy31 != 0 ? (y - y3) * dx31 / dy31 + x3 : x3;
+      if (s1 > s2)
+        SWAP(int, s1, s2);
+      for (int x = s1; x <= s2; x++) {
+        if (0 <= x && (size_t)x < pixels_width) {
+          pixels[y * pixels_width + x] = color;
+        }
+      }
+    }
+  }
+}
+
 #endif // ZAYTUN_INPLIMENTATRION
