@@ -18,12 +18,23 @@ void fill(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
   }
 }
 
+// provide -w -h to draw from the oposide side
 void fill_rect(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
-               int x0, int y0, uint32_t w, uint32_t h, uint32_t color) {
-  for (int dy = 0; dy < (int)h; dy++) {
+               int x0, int y0, int w, int h, uint32_t color) {
+  if (w < 0) {
+    w *= -1;
+    x0 -= w;
+  }
+
+  if (h < 0) {
+    h *= -1;
+    y0 -= h;
+  }
+
+  for (int dy = 0; dy < h; dy++) {
     int y = y0 + dy;
     if (0 <= y && y < (int)pixels_height) {
-      for (int dx = 0; dx < (int)w; dx++) {
+      for (int dx = 0; dx < w; dx++) {
         int x = x0 + dx;
         if (0 <= x && x < (int)pixels_width) {
           pixels[y * pixels_width + x] = color;
