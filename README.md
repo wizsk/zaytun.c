@@ -22,3 +22,6 @@ gcc example.c -o example
 ![lines](./demos/lines.png)
 
 ![triangle](./demos/trianlge.png)
+
+
+![tranperency](./demos/tranperency.png)
