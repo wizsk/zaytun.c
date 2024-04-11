@@ -7,11 +7,12 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define SCALER 2
+#define SCALER 1
 #define WIDTH (SCALER * 800)
 #define HEIGHT (SCALER * 600)
 
-#define IMG_DIR "demos"
+// #define IMG_DIR "demos"
+#define IMG_DIR "test"
 
 #define BACLGROUD_COLOR 0xFF202020
 #define FOREGROUD_COLOR 0xFF0000FF
@@ -110,10 +111,29 @@ void triangle() {
   }
 }
 
+void tranparency() {
+  fill(pixels, WIDTH, HEIGHT, BACLGROUD_COLOR);
+
+  fill_rect(pixels, WIDTH, HEIGHT, 0, 0, WIDTH * 3 / 4, HEIGHT * 3 / 4,
+            0xFF0000FF);
+
+  fill_rect(pixels, WIDTH, HEIGHT, WIDTH, HEIGHT, -WIDTH * 3 / 4,
+            -HEIGHT * 3 / 4, 0x8800FF00);
+
+  fill_circule(pixels, WIDTH, HEIGHT, WIDTH / 2, HEIGHT / 2, WIDTH * 2 / 6,
+               0x77FF0000);
+
+  const char *ouput = IMG_DIR "/tranperency.png";
+  if (save_to_file(pixels, WIDTH, HEIGHT, ouput) < 0) {
+    printf("err: while saveing file %s\n", ouput);
+  }
+}
+
 int main() {
   mkdir(IMG_DIR, 0777);
   lines_man();
   checkerboard_rec();
   checkerboard_cir();
   triangle();
+  tranparency();
 }

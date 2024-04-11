@@ -11,10 +11,59 @@
     b = t;                                                                     \
   }
 
+// 0xAABBGGRR
+typedef enum {
+  COLOR_RED = 0,
+  COLOR_BLUE,
+  COLOR_GREEN,
+  COLOR_ALPHA,
+  COLOR_COUNT,
+} Comp_Index;
+
+// taken as u16 so that it expands automatically
+uint8_t mix_copms(uint16_t c1, uint16_t c2, uint16_t a) {
+  // lerp: a, b, t = a + (b-a)*t where 0 <= t <= 1
+  // so we need t in range of 0..1 but we have 0..255
+  // c1 + (c2-c1) * a/255
+  // c1 + c2*a/255 - c1*a/255
+  // (c1 + c2 - c1)a/255
+  return c1 + (c2 - c1) * a / 255;
+}
+
+void unpack_rgb32(uint32_t c, uint8_t comp[COLOR_COUNT]) {
+  for (int i = 0; i < COLOR_COUNT; i++) {
+    comp[i] = c & 0xFF;
+    c >>= 8;
+  }
+}
+
+uint32_t pack_rgb32(uint8_t comp[COLOR_COUNT]) {
+  uint32_t res = 0;
+  for (size_t i = 0; i < COLOR_COUNT; i++) {
+    res |= comp[i] << (8 * i);
+  }
+
+  return res;
+}
+
+uint32_t mix_colors(uint32_t c1, uint32_t c2) {
+  uint8_t comp1[COLOR_COUNT];
+  unpack_rgb32(c1, comp1);
+  uint8_t comp2[COLOR_COUNT];
+  unpack_rgb32(c2, comp2);
+
+  for (int i = 0; i < COLOR_COUNT; ++i) {
+    // we are also mixing the alpahs
+    comp1[i] = mix_copms(comp1[i], comp2[i], comp2[COLOR_ALPHA]);
+  }
+
+  return pack_rgb32(comp1);
+}
+
 void fill(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
           uint32_t color) {
   for (int i = 0; i < (int)(pixels_width * pixels_height); ++i) {
-    pixels[i] = color;
+    pixels[i] = mix_colors(pixels[i], color);
   }
 }
 
@@ -37,7 +86,8 @@ void fill_rect(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
       for (int dx = 0; dx < w; dx++) {
         int x = x0 + dx;
         if (0 <= x && x < (int)pixels_width) {
-          pixels[y * pixels_width + x] = color;
+          pixels[y * pixels_width + x] =
+              mix_colors(pixels[y * pixels_width + x], color);
         }
       }
     }
@@ -58,7 +108,8 @@ void fill_circule(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
           int dx = x - cx;
           int dy = y - cy;
           if (dx * dx + dy * dy <= r * r) {
-            pixels[y * pixels_width + x] = color;
+            pixels[y * pixels_width + x] =
+                mix_colors(pixels[y * pixels_width + x], color);
           }
         }
       }
@@ -84,7 +135,8 @@ void draw_line(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
           SWAP(int, sy1, sy2);
         for (int y = sy1; y <= sy2; ++y) {
           if (0 <= y && y < (int)pixels_height) {
-            pixels[y * pixels_width + x] = color;
+            pixels[y * pixels_width + x] =
+                mix_colors(pixels[y * pixels_width + x], color);
           }
         }
       }
@@ -98,7 +150,8 @@ void draw_line(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
         SWAP(int, y1, y2);
       for (int y = y1; y <= y2; y++) {
         if (0 <= y && y < (int)pixels_height) {
-          pixels[y * pixels_width + x] = color;
+          pixels[y * pixels_width + x] =
+              mix_colors(pixels[y * pixels_width + x], color);
         }
       }
     }
@@ -141,7 +194,8 @@ void fill_triangle(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
         SWAP(int, s1, s2);
       for (int x = s1; x <= s2; x++) {
         if (0 <= x && (size_t)x < pixels_width) {
-          pixels[y * pixels_width + x] = color;
+          pixels[y * pixels_width + x] =
+              mix_colors(pixels[y * pixels_width + x], color);
         }
       }
     }
@@ -160,7 +214,8 @@ void fill_triangle(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
         SWAP(int, s1, s2);
       for (int x = s1; x <= s2; x++) {
         if (0 <= x && (size_t)x < pixels_width) {
-          pixels[y * pixels_width + x] = color;
+          pixels[y * pixels_width + x] =
+              mix_colors(pixels[y * pixels_width + x], color);
         }
       }
     }
