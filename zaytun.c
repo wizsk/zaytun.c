@@ -57,9 +57,9 @@ uint32_t mix_colors(uint32_t c1, uint32_t c2) {
     comp1[i] = mix_comps(comp1[i], comp2[i], comp2[COMP_ALPHA]);
   }
 
-  if (comp1[COMP_ALPHA] == 0) {
-    comp1[COMP_ALPHA] = comp2[COMP_ALPHA];
-  }
+  // if (comp1[COMP_ALPHA] == 0) {
+  //   comp1[COMP_ALPHA] = comp2[COMP_ALPHA];
+  // }
 
   return pack_rgb32(comp1);
 }
@@ -67,7 +67,8 @@ uint32_t mix_colors(uint32_t c1, uint32_t c2) {
 void fill(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
           uint32_t color) {
   for (int i = 0; i < (int)(pixels_width * pixels_height); ++i) {
-    pixels[i] = mix_colors(pixels[i], color);
+    // pixels[i] = mix_colors(pixels[i], color);
+    pixels[i] = color;
   }
 }
 
