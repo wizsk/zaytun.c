@@ -13,15 +13,15 @@
 
 // 0xAABBGGRR
 typedef enum {
-  COLOR_RED = 0,
-  COLOR_BLUE,
-  COLOR_GREEN,
-  COLOR_ALPHA,
-  COLOR_COUNT,
+  COMP_RED = 0,
+  COMP_GREEN,
+  COMP_BLUE,
+  COMP_ALPHA,
+  COMP_COUNT,
 } Comp_Index;
 
 // taken as u16 so that it expands automatically
-uint8_t mix_copms(uint16_t c1, uint16_t c2, uint16_t a) {
+uint8_t mix_comps(uint16_t c1, uint16_t c2, uint16_t a) {
   // lerp: a, b, t = a + (b-a)*t where 0 <= t <= 1
   // so we need t in range of 0..1 but we have 0..255
   // c1 + (c2-c1) * a/255
@@ -30,16 +30,16 @@ uint8_t mix_copms(uint16_t c1, uint16_t c2, uint16_t a) {
   return c1 + (c2 - c1) * a / 255;
 }
 
-void unpack_rgb32(uint32_t c, uint8_t comp[COLOR_COUNT]) {
-  for (int i = 0; i < COLOR_COUNT; i++) {
+void unpack_rgb32(uint32_t c, uint8_t comp[COMP_COUNT]) {
+  for (int i = 0; i < COMP_COUNT; i++) {
     comp[i] = c & 0xFF;
     c >>= 8;
   }
 }
 
-uint32_t pack_rgb32(uint8_t comp[COLOR_COUNT]) {
+uint32_t pack_rgb32(uint8_t comp[COMP_COUNT]) {
   uint32_t res = 0;
-  for (size_t i = 0; i < COLOR_COUNT; i++) {
+  for (size_t i = 0; i < COMP_COUNT; i++) {
     res |= comp[i] << (8 * i);
   }
 
@@ -47,14 +47,19 @@ uint32_t pack_rgb32(uint8_t comp[COLOR_COUNT]) {
 }
 
 uint32_t mix_colors(uint32_t c1, uint32_t c2) {
-  uint8_t comp1[COLOR_COUNT];
+  uint8_t comp1[COMP_COUNT];
   unpack_rgb32(c1, comp1);
-  uint8_t comp2[COLOR_COUNT];
+
+  uint8_t comp2[COMP_COUNT];
   unpack_rgb32(c2, comp2);
 
-  for (int i = 0; i < COLOR_COUNT; ++i) {
-    // we are also mixing the alpahs
-    comp1[i] = mix_copms(comp1[i], comp2[i], comp2[COLOR_ALPHA]);
+  for (size_t i = 0; i < COMP_ALPHA; ++i) {
+    comp1[i] = mix_comps(comp1[i], comp2[i], comp2[COMP_ALPHA]);
+  }
+
+  if (comp1[COMP_ALPHA] == 0) {
+    comp1[COMP_ALPHA] =
+        mix_comps(comp1[COMP_ALPHA], comp2[COMP_ALPHA], comp2[COMP_ALPHA]);
   }
 
   return pack_rgb32(comp1);

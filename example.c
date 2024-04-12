@@ -1,27 +1,27 @@
 #include "zaytun.c"
+#include <stdint.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
 #include <stdio.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 
-#define SCALER 1
+#define SCALER 2
 #define WIDTH (SCALER * 800)
 #define HEIGHT (SCALER * 600)
 
-// #define IMG_DIR "demos"
-#define IMG_DIR "test"
+#define IMG_DIR "demos"
+// #define IMG_DIR "test"
 
 #define BACLGROUD_COLOR 0xFF202020
 #define FOREGROUD_COLOR 0xFF0000FF
 
 // access a pixed [HEIGHT*x + WIDTH]
-u_int32_t pixels[HEIGHT * WIDTH];
+uint32_t pixels[HEIGHT * WIDTH];
 
-int save_to_file(u_int32_t *pixels, size_t w, size_t h, const char *file_name) {
-  return stbi_write_png(file_name, w, h, 4, pixels, w * sizeof(u_int32_t));
+int save_to_file(uint32_t *pixels, size_t w, size_t h, const char *file_name) {
+  return stbi_write_png(file_name, w, h, 4, pixels, w * sizeof(uint32_t));
 }
 
 // for the cheker board
@@ -32,7 +32,7 @@ int save_to_file(u_int32_t *pixels, size_t w, size_t h, const char *file_name) {
 void checkerboard_rec() {
   for (int y = 0; y < ROWS; ++y) {
     for (int x = 0; x < COLS; ++x) {
-      u_int32_t color;
+      uint32_t color;
       if ((x + y) % 2 == 0) {
         color = FOREGROUD_COLOR;
       } else {
@@ -78,7 +78,7 @@ void checkerboard_cir() {
 void lines_man() {
   fill(pixels, WIDTH, HEIGHT, BACLGROUD_COLOR);
 
-  u_int32_t c = FOREGROUD_COLOR;
+  uint32_t c = FOREGROUD_COLOR;
   draw_line(pixels, WIDTH, HEIGHT, WIDTH / 2, HEIGHT, WIDTH / 2, 0, c);
   draw_line(pixels, WIDTH, HEIGHT, 0, HEIGHT / 2, WIDTH, HEIGHT / 2, c);
 
@@ -101,7 +101,7 @@ void lines_man() {
 void triangle() {
   fill(pixels, WIDTH, HEIGHT, BACLGROUD_COLOR);
 
-  u_int32_t c = FOREGROUD_COLOR;
+  uint32_t c = FOREGROUD_COLOR;
   fill_triangle(pixels, WIDTH, HEIGHT, WIDTH / 2, HEIGHT / 8, WIDTH / 7,
                 HEIGHT / 2, WIDTH * 7 / 8, HEIGHT * 7 / 8, c);
 
