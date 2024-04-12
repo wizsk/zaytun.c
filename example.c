@@ -118,7 +118,7 @@ void tranparency() {
             0xFF0000FF);
 
   fill_rect(pixels, WIDTH, HEIGHT, WIDTH, HEIGHT, -WIDTH * 3 / 4,
-            -HEIGHT * 3 / 4, 0x8800FF00);
+            -HEIGHT * 3 / 4, 0x6600FF00);
 
   fill_circule(pixels, WIDTH, HEIGHT, WIDTH / 2, HEIGHT / 2, WIDTH * 2 / 6,
                0x77FF0000);
