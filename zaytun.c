@@ -58,8 +58,7 @@ uint32_t mix_colors(uint32_t c1, uint32_t c2) {
   }
 
   if (comp1[COMP_ALPHA] == 0) {
-    comp1[COMP_ALPHA] =
-        mix_comps(comp1[COMP_ALPHA], comp2[COMP_ALPHA], comp2[COMP_ALPHA]);
+    comp1[COMP_ALPHA] = comp2[COMP_ALPHA];
   }
 
   return pack_rgb32(comp1);
