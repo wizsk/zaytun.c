@@ -1,5 +1,6 @@
 #include "zaytun.c"
 #include <stdint.h>
+#include <wchar.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -123,6 +124,8 @@ void tranparency() {
   fill_circule(pixels, WIDTH, HEIGHT, WIDTH / 2, HEIGHT / 2, WIDTH * 2 / 6,
                0x77FF0000);
 
+  fill_triangle(pixels, WIDTH, HEIGHT, WIDTH / 2, 0, 0, HEIGHT, WIDTH, HEIGHT,
+                0x77A0FFA0);
   const char *ouput = IMG_DIR "/tranperency.png";
   if (save_to_file(pixels, WIDTH, HEIGHT, ouput) < 0) {
     printf("err: while saveing file %s\n", ouput);
