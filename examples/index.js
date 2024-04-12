@@ -17,7 +17,7 @@ function make_environment(...envs) {
     });
 }
 
-WebAssembly.instantiateStreaming(fetch('trianlge.wasm'), {
+WebAssembly.instantiateStreaming(fetch('/bin/triangle.wasm'), {
     "env": make_environment({
         "atan2f": Math.atan2,
         "cosf": Math.cos,

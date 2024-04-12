@@ -99,8 +99,8 @@ void fill_rect(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
   }
 }
 
-void fill_circule(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
-                  int cx, int cy, int r, uint32_t color) {
+void fill_circle(uint32_t *pixels, size_t pixels_width, size_t pixels_height,
+                 int cx, int cy, int r, uint32_t color) {
   int x1 = cx - r;
   int y1 = cy - r;
   int x2 = cx + r;
