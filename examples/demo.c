@@ -1,9 +1,8 @@
-#include "zaytun.c"
+#include "../zaytun.c"
 #include <stdint.h>
-#include <wchar.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
+#include "../3rd_party/stb_image_write.h"
 
 #include <stdio.h>
 #include <sys/stat.h>
@@ -65,7 +64,7 @@ void checkerboard_cir() {
       if (CELL_HEIGHT < r)
         r = CELL_HEIGHT;
 
-      fill_circule(pixels, WIDTH, HEIGHT, x * CELL_WIDTH + CELL_WIDTH / 2,
+      fill_circle(pixels, WIDTH, HEIGHT, x * CELL_WIDTH + CELL_WIDTH / 2,
                    y * CELL_HEIGHT + CELL_HEIGHT / 2,
                    (int)lerpf((float)r / 8, (float)r / 2, t), FOREGROUD_COLOR);
     }
@@ -121,7 +120,7 @@ void tranparency() {
   fill_rect(pixels, WIDTH, HEIGHT, WIDTH, HEIGHT, -WIDTH * 3 / 4,
             -HEIGHT * 3 / 4, 0x6600FF00);
 
-  fill_circule(pixels, WIDTH, HEIGHT, WIDTH / 2, HEIGHT / 2, WIDTH * 2 / 6,
+  fill_circle(pixels, WIDTH, HEIGHT, WIDTH / 2, HEIGHT / 2, WIDTH * 2 / 6,
                0x77FF0000);
 
   fill_triangle(pixels, WIDTH, HEIGHT, WIDTH / 2, 0, 0, HEIGHT, WIDTH, HEIGHT,

@@ -7,8 +7,8 @@ In memory graphics libray. In Arabic olive is called zaytun.
 ## Build and run
 
 ```console
-gcc example.c -o example
-./example
+gcc examples/demo.c -o demo
+./demo
 ```
 
 ## Demos
